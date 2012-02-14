@@ -86,7 +86,9 @@ public class BarcodeScanner extends Plugin {
     public void scan() {
         Intent intentScan = new Intent("com.phonegap.plugins.barcodescanner.SCAN");
         intentScan.addCategory(Intent.CATEGORY_DEFAULT);
-
+        //intentScan.putExtra("SCAN_WIDTH", 800);
+        //intentScan.putExtra("SCAN_HEIGHT", 200);
+        intentScan.putExtra("SCAN_FORMATS", "UPC_EAN_EXTENSION");
         this.ctx.startActivityForResult((Plugin) this, intentScan, REQUEST_CODE);
     }
 
@@ -104,6 +106,9 @@ public class BarcodeScanner extends Plugin {
                 JSONObject obj = new JSONObject();
                 try {
                     obj.put("text", intent.getStringExtra("SCAN_RESULT"));
+                    obj.put("extension", intent.getStringExtra("EXTENSION"));
+                    obj.put("barcode", intent.getStringExtra("SCAN_RESULT").replaceFirst("^0+(?!$)", "")
+                            + intent.getStringExtra("EXTENSION"));
                     obj.put("format", intent.getStringExtra("SCAN_RESULT_FORMAT"));
                     obj.put("cancelled", false);
                 } catch(JSONException e) {
