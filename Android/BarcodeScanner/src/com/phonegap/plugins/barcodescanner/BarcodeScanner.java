@@ -14,13 +14,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-/* Custom barcode window
- import android.content.Context;
- import android.os.Bundle;
- import android.view.View;
- import android.view.Display;
- import android.view.WindowManager;
- */
+import android.util.Log;
 
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
@@ -30,17 +24,20 @@ import org.apache.cordova.api.PluginResult;
  */
 public class BarcodeScanner extends Plugin {
     private static final String TEXT_TYPE = "TEXT_TYPE";
-    
+    private static final String EMAIL_TYPE = "EMAIL_TYPE";
+    private static final String PHONE_TYPE = "PHONE_TYPE";
+    private static final String SMS_TYPE = "SMS_TYPE";
+
     public static final int REQUEST_CODE = 0x0ba7c0de;
-    
+
     public String callback;
-    
+
     /**
      * Constructor.
      */
     public BarcodeScanner() {
     }
-    
+
     /**
      * Executes the request and returns PluginResult.
      *
@@ -51,7 +48,7 @@ public class BarcodeScanner extends Plugin {
      */
     public PluginResult execute(String action, JSONArray args, String callbackId) {
         this.callback = callbackId;
-        
+
         if (action.equals("encode")) {
             JSONObject obj = args.optJSONObject(0);
             if (obj != null) {
@@ -81,26 +78,18 @@ public class BarcodeScanner extends Plugin {
         r.setKeepCallback(true);
         return r;
     }
-    
-    
+
+
     /**
      * Starts an intent to scan and decode a barcode.
      */
     public void scan() {
-    	/* Custom barcode window
-         Display display = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-         int width = display.getWidth();
-         int height = display.getHeight() / 2;
-         */
         Intent intentScan = new Intent("com.phonegap.plugins.barcodescanner.SCAN");
-        /* Custom barcode window
-         intentScan.putExtra("SCAN_WIDTH", width);
-         intentScan.putExtra("SCAN_HEIGHT", height);
-         */
-        intentScan.putExtra("SCAN_FORMATS", "UPC_EAN_EXTENSION");
+        intentScan.addCategory(Intent.CATEGORY_DEFAULT);
+
         this.ctx.startActivityForResult((Plugin) this, intentScan, REQUEST_CODE);
     }
-    
+
     /**
      * Called when the barcode scanner intent completes
      *
@@ -110,43 +99,33 @@ public class BarcodeScanner extends Plugin {
      * @param intent            An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    	if (requestCode == REQUEST_CODE) {
-    		if (resultCode == Activity.RESULT_OK) {
-    			String barcode = intent.getStringExtra("SCAN_RESULT").replaceFirst("^0+(?!$)", "")
-                + intent.getStringExtra("EXTENSION");
-    			if (barcode.length() != 17) {
-    				scan();
-    			} else {
-    				JSONObject obj = new JSONObject();
-    				try {
-    					obj.put("text", intent.getStringExtra("SCAN_RESULT"));
-    					obj.put("extension", intent.getStringExtra("EXTENSION"));
-    					obj.put("barcode", barcode);
-    					obj.put("format", intent.getStringExtra("SCAN_RESULT_FORMAT"));
-    					obj.put("cancelled", false);
-    				} catch(JSONException e) {
-    					//Log.d(LOG_TAG, "This should never happen");
-    				}
-    				this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
-    			}
-    		} else if (resultCode == Activity.RESULT_CANCELED) {
-    			JSONObject obj = new JSONObject();
-    			try {
-    				obj.put("text", "");
-    				obj.put("format", "");
-    				obj.put("extension", "");
-    				obj.put("barcode", "");
-    				obj.put("cancelled", true);
-    			} catch(JSONException e) {
-    				//Log.d(LOG_TAG, "This should never happen");
-    			}
-    			this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
-    		} else {
-    			this.error(new PluginResult(PluginResult.Status.ERROR), this.callback);
-    		}
-    	}
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("text", intent.getStringExtra("SCAN_RESULT"));
+                    obj.put("format", intent.getStringExtra("SCAN_RESULT_FORMAT"));
+                    obj.put("cancelled", false);
+                } catch(JSONException e) {
+                    //Log.d(LOG_TAG, "This should never happen");
+                }
+                this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
+            } if (resultCode == Activity.RESULT_CANCELED) {
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("text", "");
+                    obj.put("format", "");
+                    obj.put("cancelled", true);
+                } catch(JSONException e) {
+                    //Log.d(LOG_TAG, "This should never happen");
+                }
+                this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
+            } else {
+                this.error(new PluginResult(PluginResult.Status.ERROR), this.callback);
+            }
+        }
     }
-    
+
     /**
      * Initiates a barcode encode. 
      * @param data  The data to encode in the bar code
