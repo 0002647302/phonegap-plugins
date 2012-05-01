@@ -5,6 +5,7 @@
  * Copyright (c) 2005-2011, Nitobi Software Inc.
  * Copyright (c) 2010-2011, IBM Corporation
  */
+
 package com.phonegap.plugins.childBrowser;
 
 import java.io.IOException;
@@ -36,22 +37,22 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.phonegap.api.PhonegapActivity;
-import com.phonegap.api.Plugin;
-import com.phonegap.api.PluginResult;
+import org.apache.cordova.api.Plugin;
+import org.apache.cordova.api.PluginResult;
 
 public class ChildBrowser extends Plugin {
     
     protected static final String LOG_TAG = "ChildBrowser";
     private static int CLOSE_EVENT = 0;
     private static int LOCATION_CHANGED_EVENT = 1;
-
+    
     private String browserCallbackId = null;
-
+    
     private Dialog dialog;
     private WebView webview;
     private EditText edittext; 
     private boolean showLocationBar = true;
-
+    
     /**
      * Executes the request and returns PluginResult.
      *
@@ -63,7 +64,7 @@ public class ChildBrowser extends Plugin {
     public PluginResult execute(String action, JSONArray args, String callbackId) {
         PluginResult.Status status = PluginResult.Status.OK;
         String result = "";
-
+        
         try {
             if (action.equals("showWebPage")) {
                 this.browserCallbackId = callbackId;
@@ -108,7 +109,7 @@ public class ChildBrowser extends Plugin {
             return new PluginResult(PluginResult.Status.JSON_EXCEPTION);
         }
     }
-
+    
     /**
      * Display a new browser with the specified URL.
      *
@@ -123,10 +124,10 @@ public class ChildBrowser extends Plugin {
                 intent = new Intent().setClass(this.ctx.getContext(), org.apache.cordova.DroidGap.class);
                 intent.setData(Uri.parse(url)); // This line will be removed in future.
                 intent.putExtra("url", url);
-
+                
                 // Timeout parameter: 60 sec max - May be less if http device timeout is less.
                 intent.putExtra("loadUrlTimeoutValue", 60000);
-
+                
                 // These parameters can be configured if you want to show the loading dialog
                 intent.putExtra("loadingDialog", "Wait,Loading web page...");   // show loading dialog
                 intent.putExtra("hideLoadingDialogOnPageLoad", true);           // hide it once page has completely loaded
@@ -142,7 +143,7 @@ public class ChildBrowser extends Plugin {
             return e.toString();
         }
     }
-
+    
     /**
      * Closes the dialog
      */
@@ -151,7 +152,7 @@ public class ChildBrowser extends Plugin {
             dialog.dismiss();
         }
     }
-
+    
     /**
      * Checks to see if it is possible to go back one page in history, then does so.
      */
@@ -160,7 +161,7 @@ public class ChildBrowser extends Plugin {
             this.webview.goBack();
         }
     }
-
+    
     /**
      * Checks to see if it is possible to go forward one page in history, then does so.
      */
@@ -169,7 +170,7 @@ public class ChildBrowser extends Plugin {
             this.webview.goForward();
         }
     }
-
+    
     /**
      * Navigate to the new page
      * 
@@ -178,15 +179,15 @@ public class ChildBrowser extends Plugin {
     private void navigate(String url) {        
         InputMethodManager imm = (InputMethodManager)this.ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
-
+        
         if (!url.startsWith("http")) {
             this.webview.loadUrl("http://" + url);            
         }
         this.webview.loadUrl(url);
         this.webview.requestFocus();
     }
-
-
+    
+    
     /**
      * Should we show the location bar?
      * 
@@ -195,7 +196,7 @@ public class ChildBrowser extends Plugin {
     private boolean getShowLocationBar() {
         return this.showLocationBar;
     }
-
+    
     /**
      * Display a new browser with the specified URL.
      *
@@ -212,22 +213,22 @@ public class ChildBrowser extends Plugin {
         Runnable runnable = new Runnable() {
             public void run() {
                 dialog = new Dialog(ctx.getContext(), android.R.style.Theme_Translucent_NoTitleBar);
-
+                
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        public void onDismiss(DialogInterface dialog) {
-                            try {
-                                JSONObject obj = new JSONObject();
-                                obj.put("type", CLOSE_EVENT);
-                                
-                                sendUpdate(obj, false);
-                            } catch (JSONException e) {
-                                Log.d(LOG_TAG, "Should never happen");
-                            }
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            JSONObject obj = new JSONObject();
+                            obj.put("type", CLOSE_EVENT);
+                            
+                            sendUpdate(obj, false);
+                        } catch (JSONException e) {
+                            Log.d(LOG_TAG, "Should never happen");
                         }
+                    }
                 });
-
+                
                 LinearLayout.LayoutParams backParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
                 LinearLayout.LayoutParams forwardParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
                 LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT, 1.0f);
@@ -253,7 +254,7 @@ public class ChildBrowser extends Plugin {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
                 back.setLayoutParams(backParams);
-
+                
                 ImageButton forward = new ImageButton(ctx.getContext());
                 forward.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
@@ -273,8 +274,8 @@ public class ChildBrowser extends Plugin {
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         // If the event is a key-down event on the "enter" button
                         if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                          navigate(edittext.getText().toString());
-                          return true;
+                            navigate(edittext.getText().toString());
+                            return true;
                         }
                         return false;
                     }
@@ -297,7 +298,7 @@ public class ChildBrowser extends Plugin {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
                 close.setLayoutParams(closeParams);
-                                
+                
                 webview = new WebView(ctx.getContext());
                 webview.getSettings().setJavaScriptEnabled(true);
                 webview.getSettings().setBuiltInZoomControls(true);
@@ -320,7 +321,7 @@ public class ChildBrowser extends Plugin {
                     main.addView(toolbar);
                 }
                 main.addView(webview);
-
+                
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(dialog.getWindow().getAttributes());
                 lp.width = WindowManager.LayoutParams.FILL_PARENT;
@@ -352,13 +353,13 @@ public class ChildBrowser extends Plugin {
             this.success(result, this.browserCallbackId);
         }
     }
-
+    
     /**
      * The webview client receives notifications about appView
      */
     public class ChildBrowserClient extends WebViewClient {
         EditText edittext;
-
+        
         /**
          * Constructor.
          * 
@@ -368,7 +369,7 @@ public class ChildBrowser extends Plugin {
         public ChildBrowserClient(EditText mEditText) {
             this.edittext = mEditText;
         }       
-
+        
         /**
          * Notify the host application that a page has started loading.
          * 
