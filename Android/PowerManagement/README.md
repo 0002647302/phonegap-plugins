@@ -1,6 +1,6 @@
 PowerManagement
 ===============
-Plugin for PhoneGap
+Plugin for Cordova (1.6+)
 
 The PowerManagement plugin offers access to the devices power-management functionality.
 It should be used for applications which keep running for a long time without any user interaction.
@@ -20,19 +20,18 @@ Copy the *PowerManagement.java* file to your *src/* directory.
 Edit your *AndroidManifest.xml* and add the following permission:
 `<uses-permission android:name="android.permission.WAKE_LOCK" />`
 
-In addition you have to edit your *res/xml/plugins.xml* file to let PhoneGap know about the plugin:
-`<plugin name="PowerManagement" value="com.phonegap.plugin.PowerManagement"/>`
+In addition you have to edit your *res/xml/plugins.xml* file to let Cordova know about the plugin:
+`<plugin name="PowerManagement" value="org.apache.cordova.plugin.PowerManagement"/>`
 
 ### iOS
-Copy the *PowerManagement.h* and *PowerManagement.m* files to your project.
+Copy the *PowerManagement.h* and *PowerManagement.m* files to your projects "Plugins" folder.
 
-Add the PowerManagement plugin to the *PhoneGap.plist*:
-See http://wiki.phonegap.com/w/page/41733808/PhoneGap-iOS-Plugins-Problems
+Add the PowerManagement plugin to the *Cordova.plist* file (to the Plugins list). Both Key and Value are "PowerManagement".
 
 
 License
 =======
-Copyright (C) 2011 Wolfgang Koller
+Copyright (C) 2011-2012 Wolfgang Koller
 
 This file is part of GOFG Sports Computer - http://www.gofg.at/.
 
