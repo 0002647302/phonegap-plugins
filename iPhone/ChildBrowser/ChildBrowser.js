@@ -27,7 +27,7 @@ ChildBrowser._onOpenExternal = function()
 };
 // Pages loaded into the ChildBrowser can execute callback scripts, so be careful to
 // check location, and make sure it is a location you trust.
-// Warning ... don't exec arbitrary code, it's risky and could fuck up your app.
+// Warning ... don't exec arbitrary code, it's risky and could mess up your app.
 // called from native
 ChildBrowser._onJSCallback = function(js,loc)
 {
