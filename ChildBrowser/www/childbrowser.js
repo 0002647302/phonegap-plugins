@@ -112,4 +112,4 @@ var ChildBrowser = (function (gap) {
     });
 
     return ChildBrowser;
-})(window.Cordova || window.PhoneGap);
+})(window.Cordova || window.PhoneGap || window.cordova);
