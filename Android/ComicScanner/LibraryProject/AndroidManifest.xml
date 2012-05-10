@@ -21,7 +21,6 @@ version to be published. The next versionCode will be 7, regardless of whether t
 versionName is 2.31, 2.4, or 3.0.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
     package="com.google.zxing.client.comics"
     android:versionCode="71"
     android:versionName="3.61 beta 1" >
