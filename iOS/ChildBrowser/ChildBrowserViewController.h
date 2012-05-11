@@ -13,9 +13,9 @@
  *  Discussion:
  *    Invoked when a new page has loaded
  */
--(void) onChildLocationChange:(NSString*)newLoc;
--(void) onOpenInSafari;
--(void) onClose;
+- (void) onChildLocationChange:(NSString*)newLoc;
+- (void) onOpenInSafari;
+- (void) onClose;
 @end
 
 
@@ -45,6 +45,6 @@
 - (IBAction)onDoneButtonPress:(id)sender;
 - (IBAction)onSafariButtonPress:(id)sender;
 - (void)loadURL:(NSString*)url;
--(void)closeBrowser;
+- (void)closeBrowser;
 
 @end

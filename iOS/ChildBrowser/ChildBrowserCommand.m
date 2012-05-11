@@ -44,26 +44,26 @@
     [childBrowser loadURL:url  ];
 }
 
--(void) close:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options // args: url
+- (void) close:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options // args: url
 {
     [ childBrowser closeBrowser];
 
 }
 
--(void) onClose
+- (void) onClose
 {
     NSString* jsCallback = [NSString stringWithFormat:@"window.plugins.childBrowser.onClose();",@""];
     [self.webView stringByEvaluatingJavaScriptFromString:jsCallback];
 }
 
--(void) onOpenInSafari
+- (void) onOpenInSafari
 {
     NSString* jsCallback = [NSString stringWithFormat:@"window.plugins.childBrowser.onOpenExternal();",@""];
     [self.webView stringByEvaluatingJavaScriptFromString:jsCallback];
 }
 
 
--(void) onChildLocationChange:(NSString*)newLoc
+- (void) onChildLocationChange:(NSString*)newLoc
 {
 
     NSString* tempLoc = [NSString stringWithFormat:@"%@",newLoc];

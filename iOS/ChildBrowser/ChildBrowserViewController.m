@@ -93,7 +93,7 @@
     [super dealloc];
 }
 
--(void)closeBrowser
+- (void)closeBrowser
 {
 
     if(delegate != NULL) {
@@ -107,7 +107,7 @@
     }
 }
 
--(IBAction) onDoneButtonPress:(id)sender
+- (IBAction) onDoneButtonPress:(id)sender
 {
     [ self closeBrowser];
 
@@ -116,7 +116,7 @@
 }
 
 
--(IBAction) onSafariButtonPress:(id)sender
+- (IBAction) onSafariButtonPress:(id)sender
 {
 
     if(delegate != NULL)
