@@ -81,7 +81,7 @@
 		}
 	} 
 	
-	self.loadingView = [NExLoadingView loadingViewInView:[super appViewController].view strokeOpacity:strokeOpacity 
+	self.loadingView = [NExLoadingView loadingViewInView:self.viewController.view strokeOpacity:strokeOpacity 
 									backgroundOpacity:backgroundOpacity 
 										  strokeColor:strokeColor fullScreen:fullScreen labelText:labelText 
 									  bounceAnimation:bounceAnimation boxLength:boxLength];
